@@ -1,0 +1,5 @@
+steps:
+- name: 'gcr.io/cloud-builders/gradle'
+  args: ['bootBuildImage', '--imageName=test-cloud-build:001', '--builder=gcr.io/buildpacks/builder']
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['images']
