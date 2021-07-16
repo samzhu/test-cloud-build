@@ -1,5 +1,32 @@
 steps:
-- name: 'gcr.io/cloud-builders/gradle'
-  args: ['bootBuildImage', '--imageName=test-cloud-build:001', '--builder=gcr.io/buildpacks/builder']
-- name: 'gcr.io/cloud-builders/docker'
-  args: ['images']
+  - name: gcr.io/cloud-builders/git
+    args:
+      - clone
+      - 'https://github.com/samzhu/test-cloud-build.git'
+  - name: 'gradle:7.1.1-jdk11-hotspot'
+    env:
+      - 'SONAR_HOST_URL=https://sonarqube.com.tw'
+      - 'SONAR_TOKEN=1234567890'
+    args:
+      - '-c'
+      - |
+        ls
+        cd test-cloud-build
+        gradle test sonarqube -Dsonar.qualitygate.wait=true
+    entrypoint: bash
+  - name: 'gradle:7.1.1-jdk11-hotspot'
+    args:
+      - >-
+        cd test-cloud-build && gradle -x test bootBuildImage
+        --imageName=gcr.io/${PROJECT_ID}/test-cloud-build:${BUILD_ID}
+        --builder=gcr.io/buildpacks/builder
+    entrypoint: bash
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['images']
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - push
+      - 'gcr.io/${PROJECT_ID}/test-cloud-build:${BUILD_ID}'
+
+images:
+  - 'gcr.io/${PROJECT_ID}/test-cloud-build:${BUILD_ID}'
