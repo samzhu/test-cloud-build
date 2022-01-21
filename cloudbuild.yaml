@@ -3,17 +3,17 @@ steps:
     args:
       - clone
       - 'https://github.com/samzhu/test-cloud-build.git'
-  - name: 'gradle:7.1.1-jdk11-hotspot'
-    env:
-      - 'SONAR_HOST_URL=https://sonarqube.com.tw'
-      - 'SONAR_TOKEN=1234567890'
-    args:
-      - '-c'
-      - |
-        ls
-        cd test-cloud-build
-        gradle test sonarqube -Dsonar.qualitygate.wait=true
-    entrypoint: bash
+#   - name: 'gradle:7.1.1-jdk11-hotspot'
+#     env:
+#       - 'SONAR_HOST_URL=https://sonarqube.com.tw'
+#       - 'SONAR_TOKEN=1234567890'
+#     args:
+#       - '-c'
+#       - |
+#         ls
+#         cd test-cloud-build
+#         gradle test sonarqube -Dsonar.qualitygate.wait=true
+#     entrypoint: bash
   - name: 'gradle:7.1.1-jdk11-hotspot'
     args:
       - >-
